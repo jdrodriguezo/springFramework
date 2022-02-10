@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--Para poder manejar informacion dinamica con thymeleaf-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="layout/plantilla :: head">
+        <title>Inicio</title>
+    </head>
+    <body>
+        
+        <header th:replace="layout/plantilla :: header"/>
+        
+        <br/>
+        
+        <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/agregar}">[[#{persona.crear}]]</a>
+        
+        <div th:if="${personas != null and !personas.empty}">
+            <table border="1">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')" >Editar</th>
+                    <th sec:authorize="hasRole('ROLE_ADMIN')" >Eliminar</th>
+                </tr>
+                <tr th:each="persona : ${personas}">
+                    <td th:text="${persona.nombre}"/>
+                    <td th:text="${persona.apellido}"/>
+                    <td th:text="${persona.email}"/>
+                    <td th:text="${persona.telefono}"/>
+                    <td sec:authorize="hasRole('ROLE_ADMIN')" > <a th:href="@{/editar/} + ${persona.idPersona}" th:text="Editar"/> </td> <!-- Pasamos parametro como Path Variable -->
+                    <!--td> <a th:href="@{/eliminar/} + ${persona.idPersona}" th:text="Eliminar"/> </td-->
+                    <td sec:authorize="hasRole('ROLE_ADMIN')" > <a th:href="@{/eliminar(idPersona=${persona.idPersona})}" th:text="Eliminar"/> </td> <!-- Uso del Query Parameter-->
+                </tr>
+            </table>
+        </div>
+        <div th:if="${personas == null or personas.empty}">
+            Lista de personas vacia
+        </div>
+        
+        <footer th:replace="layout/plantilla :: footer"/>
+    </body>
+</html>

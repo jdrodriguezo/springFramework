@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:fragment="head">
+        <title>Plantilla</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"/>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"/>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"/>
+        
+    </head>
+    <body>
+        <header th:fragment="header">
+            <h1 th:text="#{plantilla.titulo}">Titulo</h1>
+        </header>
+        
+        <footer th:fragment="footer">
+            <p>
+                [[ #{plantilla.pie-pagina} ]]
+            </p>
+            <form method="POST" th:action="@{/logout}">
+                <b>User: </b> <span sec:authentication="name">Login</span> |
+                <b>Roles: </b> <span sec:authentication="principal.authorities">Roles</span> |
+                <a href="#" onclick="this.parentNode.submit();">Logout</a>
+            </form>
+        </footer>
+    </body>
+</html>
