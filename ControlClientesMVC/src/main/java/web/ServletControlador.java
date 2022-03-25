@@ -19,6 +19,9 @@ public class ServletControlador extends HttpServlet{
                 case "editar":
                     this.editarCliente(request, response);
                     break;
+                case "eliminar":
+                    this.eliminarCliente(request, response);
+                    break;
                 default:
                     this.accionDefault(request, response);
             }
@@ -54,6 +57,13 @@ public class ServletControlador extends HttpServlet{
         request.getRequestDispatcher(jspEditar).forward(request, response);
     }
     
+    private void eliminarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+        int rersgistrosModificados = new ClienteDaoJDBC().eliminar(new Cliente(idCliente));
+        System.out.println("rersgistrosModificados = " + rersgistrosModificados);
+        this.accionDefault(request, response);
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         String accion = request.getParameter("accion");
@@ -61,6 +71,9 @@ public class ServletControlador extends HttpServlet{
             switch(accion){
                 case "insertar":
                     this.insertarCliente(request, response);
+                    break;
+                case "modificar":
+                    this.modificarCliente(request, response);
                     break;
                 default:
                     this.accionDefault(request, response);
@@ -84,6 +97,26 @@ public class ServletControlador extends HttpServlet{
         Cliente cliente = new Cliente(nombre, apellido, email, telefono, saldo);
         
         int registrosModificados = new ClienteDaoJDBC().insertar(cliente);
+        System.out.println("registrosModificados = " + registrosModificados);
+        
+        this.accionDefault(request, response);
+    }
+    
+    private void modificarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+        String nombre = request.getParameter("nombre");
+        String apellido = request.getParameter("apellido");
+        String email = request.getParameter("email");
+        String telefono = request.getParameter("telefono");
+        double saldo = 0D;
+        String saldoString = request.getParameter("saldo");
+        if(saldoString != null && !saldoString.isEmpty()){
+            saldo = Double.parseDouble(saldoString);
+        }
+        
+        Cliente cliente = new Cliente(idCliente, nombre, apellido, email, telefono, saldo);
+        
+        int registrosModificados = new ClienteDaoJDBC().actualizar(cliente);
         System.out.println("registrosModificados = " + registrosModificados);
         
         this.accionDefault(request, response);
